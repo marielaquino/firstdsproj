@@ -1,7 +1,9 @@
 ---
 title: "Iris Classification"
 author: Mariel Aquino
-output: html_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -89,3 +91,5 @@ featurePlot(x=x, y=y, plot='ellipse')
 #box and whisker plots for each attribute
 featurePlot(x=x, y=y, plot='box')
 ```
+
+
