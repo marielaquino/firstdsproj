@@ -65,9 +65,9 @@ validation <-dataset[-validation_index,]
 dataset <- dataset[validation_index,]
 ```
 
-##Summarize Dataset
+#Summarize Dataset
 
-#Dimensions of Iris
+##Dimensions of Iris
 
 ```r
 dim(dataset)
@@ -76,7 +76,7 @@ dim(dataset)
 ```
 ## [1] 120   5
 ```
-#Attribute Types
+##Attribute Types
 
 ```r
 sapply(dataset, class)
@@ -87,7 +87,7 @@ sapply(dataset, class)
 ##    "numeric"    "numeric"    "numeric"    "numeric"     "factor"
 ```
 
-#Class Levels
+##Class Levels
 
 ```r
 levels(dataset$Species)
@@ -96,7 +96,7 @@ levels(dataset$Species)
 ```
 ## [1] "setosa"     "versicolor" "virginica"
 ```
-#Class Distribution
+##Class Distribution
 
 ```r
 percentage <- prop.table(table(dataset$Species)) * 100
@@ -109,7 +109,7 @@ cbind(freq=table(dataset$Species), percentage=percentage)
 ## versicolor   40   33.33333
 ## virginica    40   33.33333
 ```
-#Statistical Summary
+##Statistical Summary
 
 
 ```r
@@ -120,10 +120,10 @@ summary(dataset)
 ##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
 ##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
 ##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
-##  Median :5.750   Median :3.000   Median :4.350   Median :1.300  
-##  Mean   :5.821   Mean   :3.065   Mean   :3.742   Mean   :1.186  
-##  3rd Qu.:6.300   3rd Qu.:3.400   3rd Qu.:5.100   3rd Qu.:1.800  
-##  Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
+##  Median :5.800   Median :3.000   Median :4.250   Median :1.300  
+##  Mean   :5.844   Mean   :3.066   Mean   :3.749   Mean   :1.194  
+##  3rd Qu.:6.400   3rd Qu.:3.325   3rd Qu.:5.100   3rd Qu.:1.800  
+##  Max.   :7.700   Max.   :4.400   Max.   :6.900   Max.   :2.500  
 ##        Species  
 ##  setosa    :40  
 ##  versicolor:40  
@@ -133,9 +133,9 @@ summary(dataset)
 ## 
 ```
 
-##Visualize Dataset
+#Visualize Dataset
 
-#Univariate Plots
+##Univariate Plots
 
 ```r
 # split input and output
@@ -157,7 +157,7 @@ plot(y)
 
 ![](irisclassification_files/figure-html/block_10-2.png)<!-- -->
 
-#Multivariate Plots
+##Multivariate Plots
 
 ```r
 #create a scatterplot matrix
@@ -175,4 +175,82 @@ featurePlot(x=x, y=y, plot='box')
 
 ![](irisclassification_files/figure-html/block_11-2.png)<!-- -->
 
+```r
+#density plots per attribute by class value
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+featurePlot(x=x, y=y, plot="density", scales=scales)
+```
 
+![](irisclassification_files/figure-html/block_11-3.png)<!-- -->
+
+#Evaluating Algorithms
+
+##Test Harness
+
+```r
+#run algorithms on 10-fold cross validation
+control <- trainControl(method="cv", number=10)
+metric <- 'Accuracy'
+```
+
+##Building Models
+
+```r
+#Linear Discriminant Analysis
+set.seed(7)
+fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl=control)
+
+#Classification and Regression Trees
+set.seed(7)
+fit.cart <- train(Species~., data=dataset, method="rpart", metric=metric, trControl=control)
+
+#k Nearest Neighbors
+set.seed(7)
+fit.knn <-train(Species~., data=dataset, method="knn", metric=metric, trControl=control)
+
+#Support Vector Machines
+set.seed(7)
+fit.svm <- train(Species~., data=dataset, method="rf", metric=metric, trControl=control)
+
+#Random Forest
+set.seed(7)
+fit.rf <- train(Species~., data=dataset, method="rf", metric=metric, trControl=control)
+```
+
+##Which is the best?
+
+```r
+results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
+summary(results)
+```
+
+```
+## 
+## Call:
+## summary.resamples(object = results)
+## 
+## Models: lda, cart, knn, svm, rf 
+## Number of resamples: 10 
+## 
+## Accuracy 
+##           Min.   1st Qu.    Median      Mean 3rd Qu. Max. NA's
+## lda  0.9166667 1.0000000 1.0000000 0.9916667       1    1    0
+## cart 0.8333333 0.9166667 1.0000000 0.9500000       1    1    0
+## knn  0.9166667 0.9375000 1.0000000 0.9750000       1    1    0
+## svm  0.9166667 0.9166667 0.9583333 0.9583333       1    1    0
+## rf   0.9166667 0.9166667 0.9583333 0.9583333       1    1    0
+## 
+## Kappa 
+##       Min. 1st Qu. Median   Mean 3rd Qu. Max. NA's
+## lda  0.875 1.00000 1.0000 0.9875       1    1    0
+## cart 0.750 0.87500 1.0000 0.9250       1    1    0
+## knn  0.875 0.90625 1.0000 0.9625       1    1    0
+## svm  0.875 0.87500 0.9375 0.9375       1    1    0
+## rf   0.875 0.87500 0.9375 0.9375       1    1    0
+```
+
+```r
+dotplot(results)
+```
+
+![](irisclassification_files/figure-html/accuracy-1.png)<!-- -->

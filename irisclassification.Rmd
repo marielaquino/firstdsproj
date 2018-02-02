@@ -38,35 +38,35 @@ validation <-dataset[-validation_index,]
 dataset <- dataset[validation_index,]
 ```
 
-##Summarize Dataset
+#Summarize Dataset
 
-#Dimensions of Iris
+##Dimensions of Iris
 ```{r block 4}
 dim(dataset)
 ```
-#Attribute Types
+##Attribute Types
 ```{r block 5}
 sapply(dataset, class)
 ```
 
-#Class Levels
+##Class Levels
 ```{r block 6}
 levels(dataset$Species)
 ```
-#Class Distribution
+##Class Distribution
 ```{r block 8}
 percentage <- prop.table(table(dataset$Species)) * 100
 cbind(freq=table(dataset$Species), percentage=percentage)
 ```
-#Statistical Summary
+##Statistical Summary
 
 ```{r block 9}
 summary(dataset)
 ```
 
-##Visualize Dataset
+#Visualize Dataset
 
-#Univariate Plots
+##Univariate Plots
 ``` {r block_10}
 # split input and output
 x <- dataset[,1:4]
@@ -82,7 +82,7 @@ plot(y)
 
 ```
 
-#Multivariate Plots
+##Multivariate Plots
 ```{r block_11}
 #create a scatterplot matrix
 featurePlot(x=x, y=y, plot='ellipse')
@@ -90,6 +90,49 @@ featurePlot(x=x, y=y, plot='ellipse')
 
 #box and whisker plots for each attribute
 featurePlot(x=x, y=y, plot='box')
+
+#density plots per attribute by class value
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+featurePlot(x=x, y=y, plot="density", scales=scales)
 ```
 
+#Evaluating Algorithms
 
+##Test Harness
+```{r block_test}
+#run algorithms on 10-fold cross validation
+control <- trainControl(method="cv", number=10)
+metric <- 'Accuracy'
+```
+
+##Building Models
+```{r models}
+#Linear Discriminant Analysis
+set.seed(7)
+fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl=control)
+
+#Classification and Regression Trees
+set.seed(7)
+fit.cart <- train(Species~., data=dataset, method="rpart", metric=metric, trControl=control)
+
+#k Nearest Neighbors
+set.seed(7)
+fit.knn <-train(Species~., data=dataset, method="knn", metric=metric, trControl=control)
+
+#Support Vector Machines
+set.seed(7)
+fit.svm <- train(Species~., data=dataset, method="rf", metric=metric, trControl=control)
+
+#Random Forest
+set.seed(7)
+fit.rf <- train(Species~., data=dataset, method="rf", metric=metric, trControl=control)
+
+```
+
+##Which is the best?
+``` {r accuracy}
+results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
+summary(results)
+
+dotplot(results)
+```
