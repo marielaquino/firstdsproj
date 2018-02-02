@@ -1,0 +1,91 @@
+---
+title: "Iris Classification"
+author: Mariel Aquino
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Install Packages
+
+```{r code block, eval = FALSE}
+install.packages("caret", repos = "http://cran.us.r-project.org")
+install.packages("lattice", repos = "http://cran.us.r-project.org")
+install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+```
+#Loading Dataset
+
+```{r block 2}
+#optionally, could be loaded from a csv file. 
+library('caret', 'lattice', 'ggplot2')
+
+data(iris)
+dataset <- iris
+
+```
+
+#Create a Validation Dataset
+``` {r block 3}
+#split 80/20
+validation_index <- createDataPartition(dataset$Species,p=.8, list=FALSE)
+#validation data
+validation <-dataset[-validation_index,]
+#training data
+dataset <- dataset[validation_index,]
+```
+
+##Summarize Dataset
+
+#Dimensions of Iris
+```{r block 4}
+dim(dataset)
+```
+#Attribute Types
+```{r block 5}
+sapply(dataset, class)
+```
+
+#Class Levels
+```{r block 6}
+levels(dataset$Species)
+```
+#Class Distribution
+```{r block 8}
+percentage <- prop.table(table(dataset$Species)) * 100
+cbind(freq=table(dataset$Species), percentage=percentage)
+```
+#Statistical Summary
+
+```{r block 9}
+summary(dataset)
+```
+
+##Visualize Dataset
+
+#Univariate Plots
+``` {r block 10}
+# split input and output
+x <- dataset[,1:4]
+y <- dataset[, 5]
+
+# create box and whisker plots of each input variable
+par(mfrow=c(1,4))
+  for(i in 1:4) {
+    boxplot(x[,i], main=names(iris[i]))}
+
+#class breakdown in bar plot -- equal amount of each
+plot(y)
+
+```
+
+#Multivariate Plots
+```{r block 11}
+#create a scatterplot matrix
+featurePlot(x=x, y=y, plot='ellipse')
+#relationships between attributes and class values
+
+#box and whisker plots for each attribute
+featurePlot(x=x, y=y, plot='box')
+```
