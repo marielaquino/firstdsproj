@@ -135,4 +135,15 @@ results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, 
 summary(results)
 
 dotplot(results)
+
+#Best Model is LDA!
+print(fit.lda)
+```
+
+#Make Predictions
+
+```{r predict}
+#run LDA on validation set
+predictions <- predict(fit.lda, validation)
+confusionMatrix(predictions, validation$Species)
 ```

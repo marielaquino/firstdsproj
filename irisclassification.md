@@ -119,11 +119,11 @@ summary(dataset)
 ```
 ##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
 ##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
-##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
-##  Median :5.800   Median :3.000   Median :4.250   Median :1.300  
-##  Mean   :5.844   Mean   :3.066   Mean   :3.749   Mean   :1.194  
-##  3rd Qu.:6.400   3rd Qu.:3.325   3rd Qu.:5.100   3rd Qu.:1.800  
-##  Max.   :7.700   Max.   :4.400   Max.   :6.900   Max.   :2.500  
+##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.575   1st Qu.:0.275  
+##  Median :5.800   Median :3.000   Median :4.400   Median :1.300  
+##  Mean   :5.812   Mean   :3.033   Mean   :3.760   Mean   :1.188  
+##  3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800  
+##  Max.   :7.700   Max.   :4.200   Max.   :6.900   Max.   :2.500  
 ##        Species  
 ##  setosa    :40  
 ##  versicolor:40  
@@ -233,20 +233,20 @@ summary(results)
 ## Number of resamples: 10 
 ## 
 ## Accuracy 
-##           Min.   1st Qu.    Median      Mean 3rd Qu. Max. NA's
-## lda  0.9166667 1.0000000 1.0000000 0.9916667       1    1    0
-## cart 0.8333333 0.9166667 1.0000000 0.9500000       1    1    0
-## knn  0.9166667 0.9375000 1.0000000 0.9750000       1    1    0
-## svm  0.9166667 0.9166667 0.9583333 0.9583333       1    1    0
-## rf   0.9166667 0.9166667 0.9583333 0.9583333       1    1    0
+##           Min.   1st Qu.    Median      Mean   3rd Qu. Max. NA's
+## lda  0.9166667 0.9375000 1.0000000 0.9750000 1.0000000    1    0
+## cart 0.7500000 0.9166667 0.9166667 0.9166667 0.9791667    1    0
+## knn  0.8333333 0.9166667 1.0000000 0.9583333 1.0000000    1    0
+## svm  0.7500000 0.9166667 1.0000000 0.9500000 1.0000000    1    0
+## rf   0.7500000 0.9166667 1.0000000 0.9500000 1.0000000    1    0
 ## 
 ## Kappa 
 ##       Min. 1st Qu. Median   Mean 3rd Qu. Max. NA's
-## lda  0.875 1.00000 1.0000 0.9875       1    1    0
-## cart 0.750 0.87500 1.0000 0.9250       1    1    0
-## knn  0.875 0.90625 1.0000 0.9625       1    1    0
-## svm  0.875 0.87500 0.9375 0.9375       1    1    0
-## rf   0.875 0.87500 0.9375 0.9375       1    1    0
+## lda  0.875 0.90625  1.000 0.9625 1.00000    1    0
+## cart 0.625 0.87500  0.875 0.8750 0.96875    1    0
+## knn  0.750 0.87500  1.000 0.9375 1.00000    1    0
+## svm  0.625 0.87500  1.000 0.9250 1.00000    1    0
+## rf   0.625 0.87500  1.000 0.9250 1.00000    1    0
 ```
 
 ```r
@@ -254,3 +254,65 @@ dotplot(results)
 ```
 
 ![](irisclassification_files/figure-html/accuracy-1.png)<!-- -->
+
+```r
+#Best Model is LDA!
+print(fit.lda)
+```
+
+```
+## Linear Discriminant Analysis 
+## 
+## 120 samples
+##   4 predictor
+##   3 classes: 'setosa', 'versicolor', 'virginica' 
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 108, 108, 108, 108, 108, 108, ... 
+## Resampling results:
+## 
+##   Accuracy  Kappa 
+##   0.975     0.9625
+```
+
+#Make Predictions
+
+
+```r
+#run LDA on validation set
+predictions <- predict(fit.lda, validation)
+confusionMatrix(predictions, validation$Species)
+```
+
+```
+## Confusion Matrix and Statistics
+## 
+##             Reference
+## Prediction   setosa versicolor virginica
+##   setosa         10          0         0
+##   versicolor      0         10         0
+##   virginica       0          0        10
+## 
+## Overall Statistics
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.8843, 1)
+##     No Information Rate : 0.3333     
+##     P-Value [Acc > NIR] : 4.857e-15  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar's Test P-Value : NA         
+## 
+## Statistics by Class:
+## 
+##                      Class: setosa Class: versicolor Class: virginica
+## Sensitivity                 1.0000            1.0000           1.0000
+## Specificity                 1.0000            1.0000           1.0000
+## Pos Pred Value              1.0000            1.0000           1.0000
+## Neg Pred Value              1.0000            1.0000           1.0000
+## Prevalence                  0.3333            0.3333           0.3333
+## Detection Rate              0.3333            0.3333           0.3333
+## Detection Prevalence        0.3333            0.3333           0.3333
+## Balanced Accuracy           1.0000            1.0000           1.0000
+```
