@@ -120,10 +120,10 @@ summary(dataset)
 ##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
 ##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100  
 ##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300  
-##  Median :5.800   Median :3.000   Median :4.350   Median :1.300  
-##  Mean   :5.825   Mean   :3.051   Mean   :3.753   Mean   :1.192  
-##  3rd Qu.:6.400   3rd Qu.:3.400   3rd Qu.:5.100   3rd Qu.:1.800  
-##  Max.   :7.900   Max.   :4.200   Max.   :6.900   Max.   :2.500  
+##  Median :5.750   Median :3.000   Median :4.350   Median :1.300  
+##  Mean   :5.821   Mean   :3.065   Mean   :3.742   Mean   :1.186  
+##  3rd Qu.:6.300   3rd Qu.:3.400   3rd Qu.:5.100   3rd Qu.:1.800  
+##  Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500  
 ##        Species  
 ##  setosa    :40  
 ##  versicolor:40  
@@ -148,14 +148,14 @@ par(mfrow=c(1,4))
     boxplot(x[,i], main=names(iris[i]))}
 ```
 
-![](irisclassification_files/figure-html/block 10-1.png)<!-- -->
+![](irisclassification_files/figure-html/block_10-1.png)<!-- -->
 
 ```r
 #class breakdown in bar plot -- equal amount of each
 plot(y)
 ```
 
-![](irisclassification_files/figure-html/block 10-2.png)<!-- -->
+![](irisclassification_files/figure-html/block_10-2.png)<!-- -->
 
 #Multivariate Plots
 
@@ -164,7 +164,7 @@ plot(y)
 featurePlot(x=x, y=y, plot='ellipse')
 ```
 
-![](irisclassification_files/figure-html/block 11-1.png)<!-- -->
+![](irisclassification_files/figure-html/block_11-1.png)<!-- -->
 
 ```r
 #relationships between attributes and class values
@@ -173,6 +173,6 @@ featurePlot(x=x, y=y, plot='ellipse')
 featurePlot(x=x, y=y, plot='box')
 ```
 
-![](irisclassification_files/figure-html/block 11-2.png)<!-- -->
+![](irisclassification_files/figure-html/block_11-2.png)<!-- -->
 
 
