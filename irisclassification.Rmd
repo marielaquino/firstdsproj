@@ -67,7 +67,7 @@ summary(dataset)
 ##Visualize Dataset
 
 #Univariate Plots
-``` {r block 10}
+``` {r block_10}
 # split input and output
 x <- dataset[,1:4]
 y <- dataset[, 5]
@@ -83,7 +83,7 @@ plot(y)
 ```
 
 #Multivariate Plots
-```{r block 11}
+```{r block_11}
 #create a scatterplot matrix
 featurePlot(x=x, y=y, plot='ellipse')
 #relationships between attributes and class values
